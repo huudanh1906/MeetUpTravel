@@ -1,0 +1,10 @@
+LOAD DATABASE
+     FROM mysql://root@host.docker.internal:3306/meetuptravel
+     INTO postgresql://meetuptravel_user:VbL1go9RbsAY7HVb5S05cHLMnpxP3unM@dpg-d06dh72li9vc73e8ov60-a.singapore-postgres.render.com:5432/meetuptravel?sslmode=require
+
+WITH include drop, create tables, create indexes, reset sequences, foreign keys
+
+SET PostgreSQL PARAMETERS
+  sslmode to 'require',
+  work_mem to '128MB',
+  maintenance_work_mem to '128MB'; 
