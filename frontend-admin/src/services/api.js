@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use environment variable if available, otherwise fallback to localhost for development
-export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+export const API_URL = process.env.REACT_APP_API_URL || 'https://meetuptravel-backend.onrender.com/api';
 
 // Tours API
 export const toursApi = {
