@@ -1,0 +1,41 @@
+/* Custom styles for Quill editor */
+
+/* Default image size in editor */
+.ql-editor img {
+    width: 442px !important;
+    height: 248px !important;
+    object-fit: cover !important;
+    border-radius: 4px;
+    display: block;
+    margin: 1rem auto;
+}
+
+/* Image size in schedule sections preview */
+.schedule-section img {
+    width: 442px !important;
+    height: 248px !important;
+    object-fit: cover !important;
+    border-radius: 4px;
+    display: block;
+    margin: 1rem auto;
+}
+
+/* Image class for images added to schedule */
+.schedule-image {
+    width: 442px !important;
+    height: 248px !important;
+    object-fit: cover !important;
+    border-radius: 4px;
+    display: block;
+    margin: 1rem auto;
+}
+
+/* Make editor taller */
+.ql-container.ql-snow {
+    min-height: 200px;
+}
+
+/* Add some spacing between sections */
+.ql-editor p {
+    margin-bottom: 0.5rem;
+}

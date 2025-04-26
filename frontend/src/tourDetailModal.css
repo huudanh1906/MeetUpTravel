@@ -1,0 +1,34 @@
+/* Z-index for the tour card and modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    position: relative;
+    background-color: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 410px;
+    z-index: 10000;
+}
+
+/* Make sure TourCard has a lower z-index than the modal */
+.tour-card {
+    z-index: 1;
+    position: relative;
+}
+
+/* Prevent clicking on elements behind the modal */
+.modal-open {
+    overflow: hidden;
+} 

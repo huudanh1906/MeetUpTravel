@@ -1,0 +1,36 @@
+/* Rich text content styling */
+.description-content ul,
+.description-content ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.description-content ul li {
+    list-style-type: disc;
+    margin-bottom: 0.5rem;
+}
+
+.description-content ol li {
+    list-style-type: decimal;
+    margin-bottom: 0.5rem;
+}
+
+.description-content h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.description-content p {
+    margin-bottom: 1rem;
+}
+
+.description-content strong {
+    font-weight: 700;
+}
+
+.description-content ul li strong,
+.description-content ol li strong {
+    font-weight: 700;
+}

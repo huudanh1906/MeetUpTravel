@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #333;
+  background-color: #fafafa;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+/* Custom styles for tour detail page */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Styling for the pricing section */
+.bg-primary {
+  background-color: #4caf50;
+}
+
+.text-primary {
+  color: #4caf50;
+}
+
+/* Custom styles for the schedule section */
+.whitespace-pre-line {
+  white-space: pre-line;
+}
+
+/* Make the images look better */
+.object-cover {
+  object-fit: cover;
+}
+
+/* Styles for the sticky booking form */
+.sticky {
+  position: sticky;
+  top: 24px;
+}
+
+/* Customize buttons */
+button.w-6 {
+  transition: all 0.2s;
+}
+
+button.w-6:hover {
+  background-color: #f3f4f6;
+}
+
+/* Custom styling for the confirmation button */
+button.bg-green-500 {
+  background-color: #22c55e;
+}
+
+button.bg-green-500:hover {
+  background-color: #16a34a;
+}
+
+/* Fix for the related activities section */
+.related-activity {
+  transition: transform 0.2s;
+}
+
+.related-activity:hover {
+  transform: translateY(-4px);
+}
+
+/* Additional styles to match the image exactly */
+h2.text-xl {
+  color: #333;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+ul.list-disc li {
+  margin-bottom: 0.5rem;
+}
+
+.bg-yellow-400 {
+  background-color: #facc15;
+}
+
+.text-green-500 {
+  color: #22c55e;
+}
+
+.text-red-500 {
+  color: #ef4444;
+}
+
+/* Style the radio buttons */
+
+/* Improve border styling */
+.border {
+  border-color: #e5e7eb;
+}
+
+.border-b {
+  border-bottom-color: #e5e7eb;
+}
+
+/* Style the quantity counters */
+.w-6.h-6 {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border-color: #e5e7eb;
+  cursor: pointer;
+}
+
+/* Fix padding for sections */
+.py-6 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+/* Weather and best choices styling */
+.weather-section h3,
+.best-choices h3 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+/* Contact information styling */
+.contact-info {
+  color: #4b5563;
+}
+
+/* Style the TripAdvisor logo and rating */
+.tripadvisor-logo {
+  height: 24px;
+  margin-right: 0.5rem;
+}
+
+.custom-radio {
+  appearance: none; /* Remove default styling */
+  width: 20px; /* Set width */
+  height: 20px; /* Set height */
+  border: 2px solid black; /* Black border */
+  border-radius: 50%; /* Make it circular */
+  outline: none; /* Remove outline */
+  cursor: pointer; /* Change cursor on hover */
+}
+
+
+input[type="radio"]:checked {
+  accent-color: black; /* For modern browsers */
+}
+
