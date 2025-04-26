@@ -5,9 +5,7 @@ import Footer from '../components/Footer';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Check } from 'lucide-react';
-
-// API URL
-const API_BASE_URL = 'http://localhost:8080/api';
+import API_BASE_URL from '../config/api-config';
 
 // VietQR constants
 const BANK_ID = 'BIDV';

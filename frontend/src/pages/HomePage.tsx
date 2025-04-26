@@ -8,10 +8,7 @@ import CustomSlider from '../components/CustomSlider';
 import Alert from '../components/Alert';
 import { Card, Spinner } from '@material-tailwind/react';
 import 'font-awesome/css/font-awesome.min.css';
-
-
-// API URL - thay đổi theo môi trường của bạn
-const API_BASE_URL = 'http://localhost:8080/api';
+import API_BASE_URL from '../config/api-config';
 
 // Định nghĩa interface Tour phù hợp với TourDTO từ backend
 interface Tour {

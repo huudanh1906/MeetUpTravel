@@ -7,9 +7,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import '../tourDetailModal.css';
 import '../tourDetailStyles.css';
-
-// API URL - thay đổi theo môi trường của bạn
-const API_BASE_URL = 'http://localhost:8080/api';
+import API_BASE_URL from '../config/api-config';
 
 // Tour interfaces
 interface AdditionalService {
