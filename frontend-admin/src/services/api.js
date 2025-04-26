@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-export const API_URL = 'http://localhost:8080/api';
+// Use environment variable if available, otherwise fallback to localhost for development
+export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
 
 // Tours API
 export const toursApi = {
