@@ -9,10 +9,7 @@ services:
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: DATABASE_URL
-        fromDatabase:
-          name: meetuptravel-db
-          property: connectionString
+      # The database connection is already configured in application-prod.properties
 
   - type: web
     name: meetuptravel-frontend
@@ -36,10 +33,4 @@ services:
       - key: NODE_VERSION
         value: 18.x
       - key: REACT_APP_API_URL
-        value: https://meetuptravel-backend.onrender.com/api
-
-databases:
-  - name: meetuptravel-db
-    databaseName: meetuptravel
-    user: meetuptravel_user
-    plan: free 
+        value: https://meetuptravel-backend.onrender.com/api 
