@@ -1,36 +1,24 @@
 services:
-  # PostgreSQL Database
-  - type: pserv
-    name: meetuptravel-db
-    plan: free
-    env: postgresql
-    region: singapore
-    ipAllowList: []
-
   # Backend API Service
   - type: web
     name: meetuptravel-backend
     runtime: docker
     plan: free
-    dockerfilePath: ./Dockerfile
     region: singapore
+    rootDir: backend
+    dockerfilePath: Dockerfile
     envVars:
       - key: PORT
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: DATABASE_URL
-        fromService:
-          type: pserv
-          name: meetuptravel-db
-          property: connectionString
       - key: SPRING_DATASOURCE_URL
-        value: ${DATABASE_URL}
+        value: postgresql://meetuptravel_ylyf_user:VY4C3ysBT6aVggZGrewOobVUoNcmEmC3@dpg-d06vu5c9c44c739irumg-a/meetuptravel_ylyf
       - key: SPRING_DATASOURCE_USERNAME
-        sync: false
+        value: meetuptravel_ylyf_user
       - key: SPRING_DATASOURCE_PASSWORD
-        sync: false
-    buildCommand: mvn -f backend/pom.xml clean package -DskipTests
+        value: VY4C3ysBT6aVggZGrewOobVUoNcmEmC3
+    buildCommand: mvn clean package -DskipTests
 
   # Frontend Service
   - type: web
@@ -38,8 +26,9 @@ services:
     runtime: node
     plan: free
     region: singapore
-    buildCommand: cd frontend && npm install && npm run build
-    startCommand: cd frontend && npm install -g serve && serve -s build -l $PORT
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm install -g serve && serve -s build -l $PORT
     envVars:
       - key: NODE_VERSION
         value: 18.x
@@ -52,8 +41,9 @@ services:
     runtime: node
     plan: free
     region: singapore
-    buildCommand: cd frontend-admin && npm install && npm run build
-    startCommand: cd frontend-admin && npm install -g serve && serve -s build -l $PORT
+    rootDir: frontend-admin
+    buildCommand: npm install && npm run build
+    startCommand: npm install -g serve && serve -s build -l $PORT
     envVars:
       - key: NODE_VERSION
         value: 18.x
