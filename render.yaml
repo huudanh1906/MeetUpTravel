@@ -2,12 +2,10 @@ services:
   # Backend API Service
   - type: web
     name: meetuptravel-backend
-    runtime: java
     plan: free
     region: singapore
     rootDir: backend
-    buildCommand: mvn clean package -DskipTests
-    startCommand: java -Dspring.profiles.active=prod -jar target/backend-0.0.1-SNAPSHOT.jar
+    dockerfilePath: Dockerfile
     envVars:
       - key: PORT
         value: 8080
