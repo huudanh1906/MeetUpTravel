@@ -27,12 +27,14 @@ services:
     region: singapore
     rootDir: frontend
     buildCommand: npm install && npm run build
-    startCommand: npm install -g serve && serve -s build -l $PORT
+    startCommand: npx serve -s build -l $PORT
     envVars:
       - key: NODE_VERSION
-        value: 18.x
+        value: 18.18.0
       - key: REACT_APP_API_URL
         value: https://meetuptravel-backend.onrender.com/api
+      - key: CI
+        value: false
 
   # Admin Frontend Service
   - type: web
@@ -42,9 +44,11 @@ services:
     region: singapore
     rootDir: frontend-admin
     buildCommand: npm install && npm run build
-    startCommand: npm install -g serve && serve -s build -l $PORT
+    startCommand: npx serve -s build -l $PORT
     envVars:
       - key: NODE_VERSION
-        value: 18.x
+        value: 18.18.0
       - key: REACT_APP_API_URL
-        value: https://meetuptravel-backend.onrender.com/api 
+        value: https://meetuptravel-backend.onrender.com/api
+      - key: CI
+        value: false
