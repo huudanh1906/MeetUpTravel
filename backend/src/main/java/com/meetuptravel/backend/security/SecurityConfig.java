@@ -50,6 +50,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/tour-reviews/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/tour-pricing/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tour-highlights/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tour-included-services/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tour-excluded-services/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/additional-services/**").permitAll()
                         // Booking related public endpoints
                         .requestMatchers(HttpMethod.POST, "/api/bookings").permitAll()
