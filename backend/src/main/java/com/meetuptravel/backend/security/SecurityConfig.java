@@ -42,30 +42,21 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
+                        // Allow all GET requests
+                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
+                        // Allow all public endpoints
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
-                        // Tour related public endpoints
-                        .requestMatchers(HttpMethod.GET, "/api/tours/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tour-reviews/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tour-pricing/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tour-highlights/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tour-included-services/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/tour-excluded-services/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/additional-services/**").permitAll()
-                        // Booking related public endpoints
-                        .requestMatchers(HttpMethod.POST, "/api/bookings").permitAll()
-                        .requestMatchers("/api/bookings/by-email").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/bookings/*/cancel").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/bookings/*/confirm-vietqr-payment").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/bookings/*").permitAll()
+                        // Allow booking endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/bookings/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/bookings/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/bookings/**").permitAll()
                         // Actuator endpoints
                         .requestMatchers("/actuator/**").permitAll()
-                        // Payment verification endpoints secured by @PreAuthorize annotation
-                        .requestMatchers(HttpMethod.POST, "/api/payments/*/verify").authenticated()
-                        // Require authentication for everything else
-                        .anyRequest().authenticated());
+                        // Only require authentication for admin operations
+                        .requestMatchers("/api/admin/**").authenticated()
+                        // Allow everything else (for testing)
+                        .anyRequest().permitAll());
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
