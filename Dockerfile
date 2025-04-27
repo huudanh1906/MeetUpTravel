@@ -9,4 +9,4 @@ WORKDIR /app
 COPY --from=build /app/target/backend-0.0.1-SNAPSHOT.jar app.jar
 # The properties file is already inside the JAR
 EXPOSE 8080
-CMD ["java", "-Dspring.profiles.active=prod", "-jar", "app.jar"] 
+CMD ["java", "-Dspring.profiles.active=prod", "-Dspring.jpa.hibernate.ddl-auto=create", "-jar", "app.jar"] 
