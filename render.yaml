@@ -13,7 +13,7 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
       - key: SPRING_DATASOURCE_URL
-        value: postgresql://meetuptravel_ylyf_user:VY4C3ysBT6aVggZGrewOobVUoNcmEmC3@dpg-d06vu5c9c44c739irumg-a/meetuptravel_ylyf
+        value: jdbc:postgresql://dpg-d06vu5c9c44c739irumg-a.singapore-postgres.render.com:5432/meetuptravel_ylyf
       - key: SPRING_DATASOURCE_USERNAME
         value: meetuptravel_ylyf_user
       - key: SPRING_DATASOURCE_PASSWORD
