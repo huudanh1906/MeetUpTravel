@@ -1,6 +1,6 @@
 services:
   # PostgreSQL Database
-  - type: postgres
+  - type: postgresql
     name: meetuptravel-db
     plan: free
     region: singapore
@@ -20,7 +20,7 @@ services:
         value: prod
       - key: JDBC_DATABASE_URL
         fromService:
-          type: postgres
+          type: postgresql
           name: meetuptravel-db
           property: connectionString
       - key: SPRING_DATASOURCE_URL
