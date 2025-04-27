@@ -42,21 +42,27 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests(auth -> auth
-                        // Allow all GET requests
-                        .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
-                        // Allow all public endpoints
+                        // Public endpoints
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/public/**").permitAll()
-                        // Allow booking endpoints
-                        .requestMatchers(HttpMethod.POST, "/api/bookings/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/bookings/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/bookings/**").permitAll()
+                        // Tour related public endpoints
+                        .requestMatchers(HttpMethod.GET, "/api/tours/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tour-reviews/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/tour-pricing/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/additional-services/**").permitAll()
+                        // Booking related public endpoints
+                        .requestMatchers(HttpMethod.POST, "/api/bookings").permitAll()
+                        .requestMatchers("/api/bookings/by-email").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/bookings/*/cancel").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/bookings/*/confirm-vietqr-payment").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/bookings/*").permitAll()
                         // Actuator endpoints
                         .requestMatchers("/actuator/**").permitAll()
-                        // Only require authentication for admin operations
-                        .requestMatchers("/api/admin/**").authenticated()
-                        // Allow everything else (for testing)
-                        .anyRequest().permitAll());
+                        // Payment verification endpoints secured by @PreAuthorize annotation
+                        .requestMatchers(HttpMethod.POST, "/api/payments/*/verify").authenticated()
+                        // Require authentication for everything else
+                        .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -80,10 +86,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList(
+                "https://meetuptravel-frontend.onrender.com",
+                "https://meetuptravel-admin.onrender.com",
+                "http://localhost:3000",
+                "http://localhost:3001"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token"));
+        configuration
+                .setAllowedHeaders(Arrays.asList("authorization", "content-type", "x-auth-token", "Origin", "Accept"));
         configuration.setExposedHeaders(Arrays.asList("x-auth-token"));
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
