@@ -5,7 +5,9 @@ import com.meetuptravel.backend.model.Tour;
 import com.meetuptravel.backend.repository.CategoryRepository;
 import com.meetuptravel.backend.repository.TourRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -14,6 +16,7 @@ import java.util.HashSet;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DataInitializer implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
@@ -21,12 +24,21 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        log.info("Starting data initialization check...");
+
         // Create categories if they don't exist
         createCategoriesIfNotExist();
 
-        // Create sample tours if they don't exist
-        if (tourRepository.count() == 0) {
+        // Log the current tour count before checking
+        long tourCount = tourRepository.count();
+        log.info("Current tour count in database: {}", tourCount);
+
+        // Create sample tours ONLY if they don't exist AND the table is empty
+        if (tourCount == 0) {
+            log.info("No tours found in database. Creating sample tours...");
             createSampleTours();
+        } else {
+            log.info("Tours already exist in database. Skipping sample data creation.");
         }
     }
 
@@ -40,6 +52,7 @@ public class DataInitializer implements CommandLineRunner {
                 category.setName(name);
                 category.setDescription(name + " tours and activities");
                 categoryRepository.save(category);
+                log.info("Created category: {}", name);
             }
         }
     }
@@ -63,7 +76,8 @@ public class DataInitializer implements CommandLineRunner {
         hanoiSapa.setRating(4.9f);
         hanoiSapa.setCategories(new HashSet<>(Arrays.asList(adventure, nature)));
         hanoiSapa.setAvailableGuides(new HashSet<>(Arrays.asList("English tour guide")));
-        tourRepository.save(hanoiSapa);
+        Tour savedHanoiSapa = tourRepository.save(hanoiSapa);
+        log.info("Created sample tour: {}", savedHanoiSapa.getTitle());
 
         // Create tour 2
         Tour cuChi = new Tour();
@@ -78,7 +92,8 @@ public class DataInitializer implements CommandLineRunner {
         cuChi.setFeatured(true);
         cuChi.setCategories(new HashSet<>(Arrays.asList(culture, adventure)));
         cuChi.setAvailableGuides(new HashSet<>(Arrays.asList("Vietnamese tour guide", "English tour guide")));
-        tourRepository.save(cuChi);
+        Tour savedCuChi = tourRepository.save(cuChi);
+        log.info("Created sample tour: {}", savedCuChi.getTitle());
 
         // Create tour 3
         Tour hanoiFood = new Tour();
@@ -93,6 +108,9 @@ public class DataInitializer implements CommandLineRunner {
         hanoiFood.setFeatured(true);
         hanoiFood.setCategories(new HashSet<>(Arrays.asList(foodTour)));
         hanoiFood.setAvailableGuides(new HashSet<>(Arrays.asList("Vietnamese tour guide", "English tour guide")));
-        tourRepository.save(hanoiFood);
+        Tour savedHanoiFood = tourRepository.save(hanoiFood);
+        log.info("Created sample tour: {}", savedHanoiFood.getTitle());
+
+        log.info("Sample data creation complete.");
     }
 }

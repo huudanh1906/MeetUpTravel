@@ -4,8 +4,10 @@ import com.meetuptravel.backend.dto.AdditionalServiceDTO;
 import com.meetuptravel.backend.dto.TourDTO;
 import com.meetuptravel.backend.exception.ResourceNotFoundException;
 import com.meetuptravel.backend.model.AdditionalService;
+import com.meetuptravel.backend.model.Category;
 import com.meetuptravel.backend.model.Tour;
 import com.meetuptravel.backend.repository.AdditionalServiceRepository;
+import com.meetuptravel.backend.repository.CategoryRepository;
 import com.meetuptravel.backend.repository.TourRepository;
 import com.meetuptravel.backend.service.TourService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +36,7 @@ public class TourController {
     private final TourService tourService;
     private final TourRepository tourRepository;
     private final AdditionalServiceRepository additionalServiceRepository;
+    private final CategoryRepository categoryRepository;
 
     // Public access endpoints - Accessible to all users
 
@@ -254,26 +258,46 @@ public class TourController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Map<String, Object>> debugTourServices(@PathVariable Long id) {
         Tour tour = tourRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Tour not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour not found"));
 
-        // Get raw data from database
-        Set<AdditionalService> services = tour.getAdditionalServices();
+        Map<String, Object> debug = new HashMap<>();
+        debug.put("tour", tour);
+        debug.put("tourCategories", tour.getCategories());
+        debug.put("tourAdditionalServices", tour.getAdditionalServices());
+        debug.put("tourPricingOptions", tour.getPricingOptions());
 
-        // Prepare debug info
-        Map<String, Object> debugInfo = Map.of(
-                "tourId", tour.getId(),
-                "tourTitle", tour.getTitle(),
-                "servicesCount", services != null ? services.size() : 0,
-                "services", services != null ? services.stream()
-                        .map(s -> Map.of(
-                                "id", s.getId(),
-                                "name", s.getName(),
-                                "price", s.getPrice(),
-                                "priceUnit", s.getPriceUnit()))
-                        .collect(Collectors.toList()) : List.of(),
-                "tourHasAdditionalServices", tour.getAdditionalServices() != null,
-                "repositoryCount", additionalServiceRepository.count());
+        return ResponseEntity.ok(debug);
+    }
 
-        return ResponseEntity.ok(debugInfo);
+    // Add a new debug endpoint to check the database state
+    @GetMapping("/debug/db-status")
+    public ResponseEntity<Map<String, Object>> getDatabaseStatus() {
+        Map<String, Object> status = new HashMap<>();
+
+        // Get counts from repositories
+        long tourCount = tourRepository.count();
+        long categoryCount = categoryRepository.count();
+
+        status.put("tourCount", tourCount);
+        status.put("categoryCount", categoryCount);
+        status.put("databaseType", "PostgreSQL");
+        status.put("timestamp", new java.util.Date().toString());
+
+        // Get a sample of tours (first 3)
+        List<Tour> sampleTours = tourRepository.findAll(PageRequest.of(0, 3)).getContent();
+        status.put("sampleTours", sampleTours.stream()
+                .map(tour -> {
+                    Map<String, Object> tourMap = new HashMap<>();
+                    tourMap.put("id", tour.getId());
+                    tourMap.put("title", tour.getTitle());
+                    tourMap.put("imageUrl", tour.getImageUrl());
+                    tourMap.put("price", tour.getPrice());
+                    tourMap.put("categories",
+                            tour.getCategories().stream().map(Category::getName).collect(Collectors.toList()));
+                    return tourMap;
+                })
+                .collect(Collectors.toList()));
+
+        return ResponseEntity.ok(status);
     }
 }
