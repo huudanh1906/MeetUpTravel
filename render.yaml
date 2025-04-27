@@ -1,8 +1,9 @@
 services:
   # PostgreSQL Database
-  - type: postgresql
+  - type: pserv
     name: meetuptravel-db
     plan: free
+    env: postgresql
     region: singapore
     ipAllowList: []
 
@@ -18,13 +19,13 @@ services:
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: JDBC_DATABASE_URL
+      - key: DATABASE_URL
         fromService:
-          type: postgresql
+          type: pserv
           name: meetuptravel-db
           property: connectionString
       - key: SPRING_DATASOURCE_URL
-        value: ${JDBC_DATABASE_URL}
+        value: ${DATABASE_URL}
       - key: SPRING_DATASOURCE_USERNAME
         sync: false
       - key: SPRING_DATASOURCE_PASSWORD
