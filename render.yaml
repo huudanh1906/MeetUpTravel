@@ -2,6 +2,7 @@ services:
   # Backend API Service
   - type: web
     name: meetuptravel-backend
+    runtime: docker
     plan: free
     region: singapore
     rootDir: backend
