@@ -15,7 +15,7 @@ services:
     name: meetuptravel-frontend
     runtime: node
     plan: free
-    buildCommand: chmod +x ./generate-env.sh && ./generate-env.sh && cd frontend && npm install && npm run build
+    buildCommand: cd frontend && npm install && npm run build
     startCommand: cd frontend && npm install -g serve && serve -s build -l $PORT
     envVars:
       - key: NODE_VERSION
@@ -27,7 +27,7 @@ services:
     name: meetuptravel-admin
     runtime: node
     plan: free
-    buildCommand: chmod +x ./generate-env.sh && ./generate-env.sh && cd frontend-admin && npm install && npm run build
+    buildCommand: cd frontend-admin && npm install && npm run build
     startCommand: cd frontend-admin && npm install -g serve && serve -s build -l $PORT
     envVars:
       - key: NODE_VERSION
