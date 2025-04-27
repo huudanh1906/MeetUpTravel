@@ -17,11 +17,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
@@ -48,28 +53,42 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest loginRequest) {
-        return createAuthResponse(loginRequest.getEmail(), loginRequest.getPassword(), null);
+        logger.info("Login attempt for email: {}", loginRequest.getEmail());
+        try {
+            return createAuthResponse(loginRequest.getEmail(), loginRequest.getPassword(), null);
+        } catch (Exception e) {
+            logger.error("Login failed for email: {}, error: {}", loginRequest.getEmail(), e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Authentication failed: " + e.getMessage());
+        }
     }
 
     private ResponseEntity<?> createAuthResponse(String email, String password, User user) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenProvider.generateToken(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = tokenProvider.generateToken(authentication);
 
-        if (user == null) {
-            user = userRepository.findByEmail(email).orElseThrow();
+            if (user == null) {
+                user = userRepository.findByEmail(email).orElseThrow();
+            }
+
+            logger.info("User authenticated successfully: {}, role: {}", email, user.getRole());
+
+            AuthResponse authResponse = AuthResponse.builder()
+                    .token(jwt)
+                    .userId(user.getId())
+                    .email(user.getEmail())
+                    .fullName(user.getFullName())
+                    .role(user.getRole())
+                    .build();
+
+            return ResponseEntity.ok(authResponse);
+        } catch (Exception e) {
+            logger.error("Authentication error for {}: {}", email, e.getMessage(), e);
+            throw e;
         }
-
-        AuthResponse authResponse = AuthResponse.builder()
-                .token(jwt)
-                .userId(user.getId())
-                .email(user.getEmail())
-                .fullName(user.getFullName())
-                .role(user.getRole())
-                .build();
-
-        return ResponseEntity.ok(authResponse);
     }
 }

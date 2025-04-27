@@ -2,10 +2,14 @@ package com.meetuptravel.backend.config;
 
 import com.meetuptravel.backend.model.Category;
 import com.meetuptravel.backend.model.Tour;
+import com.meetuptravel.backend.model.User;
 import com.meetuptravel.backend.repository.CategoryRepository;
 import com.meetuptravel.backend.repository.TourRepository;
+import com.meetuptravel.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -14,19 +18,26 @@ import java.util.HashSet;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DataInitializer implements CommandLineRunner {
 
     private final CategoryRepository categoryRepository;
     private final TourRepository tourRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws Exception {
         // Create categories if they don't exist
         createCategoriesIfNotExist();
 
         // Create sample tours if they don't exist
         if (tourRepository.count() == 0) {
             createSampleTours();
+        }
+
+        if (userRepository.count() == 0 || !userRepository.existsByRole(User.Role.ADMIN)) {
+            createDefaultAdminUser();
         }
     }
 
@@ -94,5 +105,20 @@ public class DataInitializer implements CommandLineRunner {
         hanoiFood.setCategories(new HashSet<>(Arrays.asList(foodTour)));
         hanoiFood.setAvailableGuides(new HashSet<>(Arrays.asList("Vietnamese tour guide", "English tour guide")));
         tourRepository.save(hanoiFood);
+    }
+
+    private void createDefaultAdminUser() {
+        log.info("Creating default admin user");
+
+        User adminUser = new User();
+        adminUser.setEmail("admin@meetuptravel.com");
+        adminUser.setPassword(passwordEncoder.encode("Admin@123"));
+        adminUser.setFullName("Admin User");
+        adminUser.setPhoneNumber("+84123456789");
+        adminUser.setRole(User.Role.ADMIN);
+
+        userRepository.save(adminUser);
+
+        log.info("Default admin user created");
     }
 }
