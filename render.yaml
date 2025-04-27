@@ -1,14 +1,10 @@
 services:
   # PostgreSQL Database
-  - type: pserv
+  - type: postgres
     name: meetuptravel-db
     plan: free
-    env: postgres
     region: singapore
-    disk:
-      name: meetuptravel-data
-      mountPath: /var/lib/postgresql/data
-      sizeGB: 1
+    ipAllowList: []
 
   # Backend API Service
   - type: web
@@ -22,30 +18,25 @@ services:
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      - key: SPRING_DATASOURCE_URL
+      - key: JDBC_DATABASE_URL
         fromService:
-          type: pserv
+          type: postgres
           name: meetuptravel-db
           property: connectionString
-          envVarName: DATABASE_URL
+      - key: SPRING_DATASOURCE_URL
+        value: ${JDBC_DATABASE_URL}
       - key: SPRING_DATASOURCE_USERNAME
-        fromService:
-          type: pserv
-          name: meetuptravel-db
-          property: user
+        sync: false
       - key: SPRING_DATASOURCE_PASSWORD
-        fromService:
-          type: pserv
-          name: meetuptravel-db
-          property: password
+        sync: false
     buildCommand: mvn -f backend/pom.xml clean package -DskipTests
-    startCommand: java -jar backend/target/backend-0.0.1-SNAPSHOT.jar
 
   # Frontend Service
   - type: web
     name: meetuptravel-frontend
     runtime: node
     plan: free
+    region: singapore
     buildCommand: cd frontend && npm install && npm run build
     startCommand: cd frontend && npm install -g serve && serve -s build -l $PORT
     envVars:
@@ -59,6 +50,7 @@ services:
     name: meetuptravel-admin
     runtime: node
     plan: free
+    region: singapore
     buildCommand: cd frontend-admin && npm install && npm run build
     startCommand: cd frontend-admin && npm install -g serve && serve -s build -l $PORT
     envVars:
