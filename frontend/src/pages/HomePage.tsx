@@ -66,28 +66,14 @@ const HomePage: React.FC = () => {
             }
 
             const data = await response.json();
-            console.log('API Response:', data); // Log the API response to see the structure
 
-            if (data && Array.isArray(data.content)) {
-                // Spring Data pagination format
-                if (pageNum === 0) {
-                    setTours(data.content);
-                } else {
-                    setTours(prevTours => [...prevTours, ...data.content]);
-                }
-                setHasMore(!data.last);
-            } else if (data && Array.isArray(data)) {
-                // Direct array format
-                if (pageNum === 0) {
-                    setTours(data);
-                } else {
-                    setTours(prevTours => [...prevTours, ...data]);
-                }
-                setHasMore(data.length === pageSize);
+            if (pageNum === 0) {
+                setTours(data.content || []);
             } else {
-                throw new Error('Unexpected API response format');
+                setTours(prevTours => [...prevTours, ...(data.content || [])]);
             }
 
+            setHasMore(!data.last);
             setError(null);
         } catch (err) {
             console.error('Error fetching tours:', err);
@@ -137,28 +123,14 @@ const HomePage: React.FC = () => {
             }
 
             const data = await response.json();
-            console.log('Search API Response:', data); // Log the API response
 
-            if (data && Array.isArray(data.content)) {
-                // Spring Data pagination format
-                if (pageNum === 0) {
-                    setSearchResults(data.content);
-                } else {
-                    setSearchResults(prevResults => [...prevResults, ...data.content]);
-                }
-                setHasMore(!data.last);
-            } else if (data && Array.isArray(data)) {
-                // Direct array format
-                if (pageNum === 0) {
-                    setSearchResults(data);
-                } else {
-                    setSearchResults(prevResults => [...prevResults, ...data]);
-                }
-                setHasMore(data.length === pageSize);
+            if (pageNum === 0) {
+                setSearchResults(data.content || []);
             } else {
-                throw new Error('Unexpected API response format');
+                setSearchResults(prevResults => [...prevResults, ...(data.content || [])]);
             }
 
+            setHasMore(!data.last);
             setError(null);
         } catch (err) {
             console.error('Error searching tours:', err);

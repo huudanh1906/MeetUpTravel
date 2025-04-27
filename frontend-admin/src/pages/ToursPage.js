@@ -25,31 +25,12 @@ function ToursPage() {
         try {
             setLoading(true);
             const response = await toursApi.getAll(page, 10);
-            console.log('Admin API Response:', response); // Log the response
-
-            if (response && Array.isArray(response.content)) {
-                // Spring Data pagination format
-                setTours(response.content);
-                setFilteredTours(response.content);
-                setTotalPages(response.totalPages || 1);
-            } else if (response && Array.isArray(response)) {
-                // Direct array format
-                setTours(response);
-                setFilteredTours(response);
-                setTotalPages(Math.ceil(response.length / 10) || 1);
-            } else {
-                // Fallback for unexpected response format
-                console.error('Unexpected API response format:', response);
-                setTours([]);
-                setFilteredTours([]);
-                setTotalPages(1);
-                setError('Received unexpected data format from the server.');
-            }
+            setTours(response.content || []);
+            setFilteredTours(response.content || []);
+            setTotalPages(response.totalPages || 1);
         } catch (err) {
             console.error('Error fetching tours', err);
             setError('Failed to load tours. Please try again later.');
-            setTours([]);
-            setFilteredTours([]);
         } finally {
             setLoading(false);
         }

@@ -57,6 +57,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/api/bookings/*/cancel").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/bookings/*/confirm-vietqr-payment").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/bookings/*").permitAll()
+                        // Actuator endpoints
+                        .requestMatchers("/actuator/**").permitAll()
                         // Payment verification endpoints secured by @PreAuthorize annotation
                         .requestMatchers(HttpMethod.POST, "/api/payments/*/verify").authenticated()
                         // Require authentication for everything else
