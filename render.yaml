@@ -1,16 +1,47 @@
 services:
+  # PostgreSQL Database
+  - type: pserv
+    name: meetuptravel-db
+    plan: free
+    env: postgres
+    region: singapore
+    disk:
+      name: meetuptravel-data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1
+
+  # Backend API Service
   - type: web
     name: meetuptravel-backend
     runtime: docker
     plan: free
     dockerfilePath: ./Dockerfile
+    region: singapore
     envVars:
       - key: PORT
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: prod
-      # The database connection is already configured in application-prod.properties
+      - key: SPRING_DATASOURCE_URL
+        fromService:
+          type: pserv
+          name: meetuptravel-db
+          property: connectionString
+          envVarName: DATABASE_URL
+      - key: SPRING_DATASOURCE_USERNAME
+        fromService:
+          type: pserv
+          name: meetuptravel-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromService:
+          type: pserv
+          name: meetuptravel-db
+          property: password
+    buildCommand: mvn -f backend/pom.xml clean package -DskipTests
+    startCommand: java -jar backend/target/backend-0.0.1-SNAPSHOT.jar
 
+  # Frontend Service
   - type: web
     name: meetuptravel-frontend
     runtime: node
@@ -23,6 +54,7 @@ services:
       - key: REACT_APP_API_URL
         value: https://meetuptravel-backend.onrender.com/api
 
+  # Admin Frontend Service
   - type: web
     name: meetuptravel-admin
     runtime: node
