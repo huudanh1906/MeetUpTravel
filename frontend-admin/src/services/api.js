@@ -387,6 +387,42 @@ export const usersApi = {
         } catch (error) {
             throw error;
         }
+    },
+
+    create: async (userData) => {
+        try {
+            const response = await axios.post(`${API_URL}/users`, userData);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    update: async (id, userData) => {
+        try {
+            const response = await axios.put(`${API_URL}/users/${id}`, userData);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    updatePassword: async (id, password) => {
+        try {
+            const response = await axios.put(`${API_URL}/users/${id}/password`, { password });
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+
+    delete: async (id) => {
+        try {
+            await axios.delete(`${API_URL}/users/${id}`);
+            return true;
+        } catch (error) {
+            throw error;
+        }
     }
 };
 

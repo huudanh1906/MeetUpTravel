@@ -11,4 +11,12 @@ public interface UserService {
     UserDTO findById(Long id);
 
     UserDTO getCurrentUserProfile();
+
+    UserDTO createUser(UserDTO userDTO);
+
+    UserDTO updateUser(Long id, UserDTO userDTO);
+
+    UserDTO updatePassword(Long id, String newPassword);
+
+    void deleteUser(Long id);
 }

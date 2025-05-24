@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { categoriesApi } from '../services/api';
-import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, PencilIcon, TrashIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 function CategoriesPage() {
     const [categories, setCategories] = useState([]);
@@ -15,12 +15,15 @@ function CategoriesPage() {
         description: ''
     });
     const [formError, setFormError] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredCategories, setFilteredCategories] = useState([]);
 
     const fetchCategories = async () => {
         try {
             setLoading(true);
             const data = await categoriesApi.getAll(currentPage);
             setCategories(data.content);
+            setFilteredCategories(data.content);
             setTotalPages(data.totalPages);
             setError(null);
         } catch (err) {
@@ -34,6 +37,19 @@ function CategoriesPage() {
     useEffect(() => {
         fetchCategories();
     }, [currentPage]);
+
+    useEffect(() => {
+        if (searchTerm.trim() === '') {
+            setFilteredCategories(categories);
+        } else {
+            const filtered = categories.filter(
+                category =>
+                    category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase()))
+            );
+            setFilteredCategories(filtered);
+        }
+    }, [searchTerm, categories]);
 
     const handlePageChange = (newPage) => {
         setCurrentPage(newPage);
@@ -71,6 +87,15 @@ function CategoriesPage() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        // Search is already handled by the useEffect that filters categories
     };
 
     const handleSubmit = async (e) => {
@@ -113,6 +138,33 @@ function CategoriesPage() {
                 </button>
             </div>
 
+            {/* Search Bar */}
+            <div className="w-full max-w-lg">
+                <form onSubmit={handleSearchSubmit} className="flex gap-2">
+                    <div className="relative flex-grow">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                        </div>
+                        <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
+                            placeholder="Search categories..."
+                        />
+                    </div>
+                    {searchTerm && (
+                        <button
+                            type="button"
+                            onClick={() => setSearchTerm('')}
+                            className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                        >
+                            Clear
+                        </button>
+                    )}
+                </form>
+            </div>
+
             {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                     <span className="block sm:inline">{error}</span>
@@ -147,8 +199,8 @@ function CategoriesPage() {
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
-                                            {categories.length > 0 ? (
-                                                categories.map((category) => (
+                                            {filteredCategories.length > 0 ? (
+                                                filteredCategories.map((category) => (
                                                     <tr key={category.id}>
                                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                             {category.id}
@@ -178,7 +230,7 @@ function CategoriesPage() {
                                             ) : (
                                                 <tr>
                                                     <td colSpan="4" className="px-6 py-4 text-center text-sm text-gray-500">
-                                                        No categories found
+                                                        {searchTerm ? 'No categories found matching your search' : 'No categories found'}
                                                     </td>
                                                 </tr>
                                             )}
@@ -189,8 +241,8 @@ function CategoriesPage() {
                         </div>
                     </div>
 
-                    {/* Pagination */}
-                    {totalPages > 1 && (
+                    {/* Pagination - Only show when not searching */}
+                    {totalPages > 1 && !searchTerm && (
                         <div className="flex justify-center mt-4">
                             <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
                                 <button

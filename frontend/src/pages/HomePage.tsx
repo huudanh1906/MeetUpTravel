@@ -219,9 +219,11 @@ const HomePage: React.FC = () => {
     useEffect(() => {
         let filtered = [];
 
-        if (isSearching && searchResults.length > 0) {
+        if (isSearching) {
+            // If searching, only use search results (even if empty)
             filtered = [...searchResults];
         } else {
+            // Not searching, use all tours
             filtered = [...tours];
         }
 
@@ -338,8 +340,8 @@ const HomePage: React.FC = () => {
 
                 {/* Search results count */}
                 {isSearching && !loading && searchResults.length === 0 && !error && (
-                    <div className="text-gray-600 bg-gray-100 p-3 rounded-lg mb-4">
-                        No tours found matching "{searchQuery}". Try a different search term.
+                    <div className="text-gray-600 p-3 rounded-lg mb-4 text-center">
+                        No results found
                     </div>
                 )}
 
