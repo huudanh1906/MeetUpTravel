@@ -226,7 +226,7 @@ function ToursPage() {
 
                 {/* Hiển thị số lượng kết quả sau khi lọc */}
                 <div className="mt-4 text-sm text-gray-500">
-                    Found {filteredTours.length} tours
+                    {filteredTours.length} tours
                     {(searchTerm || categoryFilter || durationFilter) &&
                         ' with current filters'}
                 </div>

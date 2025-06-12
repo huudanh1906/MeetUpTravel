@@ -62,10 +62,26 @@ export const AuthProvider = ({ children }) => {
             navigate('/');
             return { success: true };
         } catch (error) {
-            return {
-                success: false,
-                message: error.response?.data?.message || error.message || 'Login failed'
-            };
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                return {
+                    success: false,
+                    message: error.response.data
+                };
+            } else if (error.request) {
+                // The request was made but no response was received
+                return {
+                    success: false,
+                    message: 'Unable to connect to server. Please try again later.'
+                };
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                return {
+                    success: false,
+                    message: error.message
+                };
+            }
         }
     };
 

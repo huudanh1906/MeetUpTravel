@@ -10,7 +10,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TourDTO {
+public class  TourDTO {
     private Long id;
     private String title;
     private String description;

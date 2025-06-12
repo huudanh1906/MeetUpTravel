@@ -48,7 +48,21 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthRequest loginRequest) {
-        return createAuthResponse(loginRequest.getEmail(), loginRequest.getPassword(), null);
+        try {
+            // Check if user exists
+            if (!userRepository.existsByEmail(loginRequest.getEmail())) {
+                return new ResponseEntity<>("User not found", HttpStatus.UNAUTHORIZED);
+            }
+
+            // Try to authenticate
+            try {
+                return createAuthResponse(loginRequest.getEmail(), loginRequest.getPassword(), null);
+            } catch (Exception e) {
+                return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred during authentication", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private ResponseEntity<?> createAuthResponse(String email, String password, User user) {

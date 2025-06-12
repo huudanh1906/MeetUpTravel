@@ -254,7 +254,7 @@ function BookingsPage() {
 
                     {/* Hiển thị số lượng kết quả sau khi lọc */}
                     <div className="mt-4 text-sm text-gray-500">
-                        Found {filteredBookings.length} bookings
+                        {filteredBookings.length} bookings
                         {(searchTerm || statusFilter || dateFilter.startDate || dateFilter.endDate) &&
                             ' with current filters'}
                     </div>

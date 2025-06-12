@@ -50,7 +50,11 @@ function Layout() {
 
                     <div className="flex-1 h-0 pt-5 pb-4 overflow-y-auto">
                         <div className="flex-shrink-0 flex items-center px-4">
-                            <h1 className="text-2xl font-bold text-primary-600">Meetup Travel</h1>
+                            <img 
+                                src="https://meetup.travel/assets/images/logo.png" 
+                                alt="Meetup Travel" 
+                                className="h-12 w-auto [filter:brightness(0)_saturate(100%)_invert(24%)_sepia(98%)_saturate(1824%)_hue-rotate(190deg)_brightness(96%)_contrast(101%)]"
+                            />
                         </div>
                         <nav className="mt-5 px-2 space-y-1">
                             {navigation.map((item) => (
@@ -90,7 +94,11 @@ function Layout() {
                 <div className="flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white">
                     <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
                         <div className="flex items-center flex-shrink-0 px-4">
-                            <h1 className="text-2xl font-bold text-primary-600">Meetup Travel</h1>
+                            <img 
+                                src="https://meetup.travel/assets/images/logo.png" 
+                                alt="Meetup Travel" 
+                                className="h-12 w-auto [filter:brightness(0)_saturate(100%)_invert(24%)_sepia(98%)_saturate(1824%)_hue-rotate(190deg)_brightness(96%)_contrast(101%)]"
+                            />
                         </div>
                         <nav className="mt-5 flex-1 px-2 bg-white space-y-1">
                             {navigation.map((item) => (

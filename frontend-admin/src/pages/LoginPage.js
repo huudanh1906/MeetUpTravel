@@ -21,10 +21,36 @@ function LoginPage() {
         try {
             const result = await login(email, password);
             if (!result.success) {
-                setError(result.message);
+                if (result.message === 'User not found') {
+                    setError('Email does not exist in the system');
+                } else if (result.message === 'Invalid credentials') {
+                    setError('Incorrect password');
+                } else {
+                    setError(result.message);
+                }
             }
         } catch (error) {
-            setError('An error occurred during login. Please try again.');
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                if (error.response.status === 401) {
+                    if (error.response.data === 'User not found') {
+                        setError('Email does not exist in the system');
+                    } else if (error.response.data === 'Invalid credentials') {
+                        setError('Incorrect password');
+                    } else {
+                        setError('Invalid email or password');
+                    }
+                } else {
+                    setError('An error occurred during login. Please try again.');
+                }
+            } else if (error.request) {
+                // The request was made but no response was received
+                setError('Unable to connect to server. Please try again later.');
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                setError('An error occurred during login. Please try again.');
+            }
         } finally {
             setLoading(false);
         }
